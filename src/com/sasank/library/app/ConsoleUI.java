@@ -114,8 +114,10 @@ public class ConsoleUI {
 		private void handleReturnBook() {
 			System.out.println(" Enter Book Id");
 			String bookId = sc.nextLine();
+			System.out.println(" Enter User Id");
+			String userId = sc.nextLine();
 			try {
-				service.returnBook(bookId);
+				service.returnBook(bookId, userId);
 				System.out.println(" Book returned with id "+ bookId );
 			}
 			catch (LibraryException e){

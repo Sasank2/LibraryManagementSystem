@@ -18,15 +18,31 @@ public class LibraryService {
 	}
 	
 	public void addBook(String bookId, String title, String author) {
+		if(bookId == null || bookId.isBlank()) {
+			throw new LibraryException("Book ID cannot be empty");
+		}
+		if(title == null || title.isBlank()) {
+			throw new LibraryException("Title cannot be empty");
+		}
+		if(author == null || author.isBlank()) {
+			throw new LibraryException("author name cannot be empty");
+		}
 		if(repository.existBookById(bookId)) {
 			throw new LibraryException("Duplicate book ID");
-		}else {
+		}
 			Book book = new Book(bookId, title, author);
 			repository.saveBook(book);
-		}
 	}
 	
 	public void registerUser(String name, String userId) {
+		
+		if(name == null || name.isBlank()) {
+			throw new LibraryException("Name cannot be empty");
+		}
+		if(userId == null || userId.isBlank()) {
+			throw new LibraryException("User ID cannot be empty");
+		}
+		
 		if(repository.existUserById(userId)) {
 			throw new LibraryException("Duplicate user ID");
 		}else {
@@ -37,12 +53,22 @@ public class LibraryService {
 	}
 	
 	public void issueBook(String bookId, String userId) {
+		if(bookId == null || bookId.isBlank()) {
+			throw new LibraryException("Book ID cannot be empty");
+		}
+		
+		if(userId == null || userId.isBlank()) {
+			throw new LibraryException("User ID cannot be empty");
+		}
+		
 		Book book = repository.findBookbyId(bookId);
+		
 		if(book == null) {
 			throw new LibraryException("No Book found");
 		}
 		
 		User user = repository.findUserById(userId);
+		
 		if(user == null) {
 			throw new LibraryException("User not found");
 		}
@@ -61,20 +87,35 @@ public class LibraryService {
 		
 	}
 	
-	public void returnBook(String bookId) {
-		Book book = repository.findBookbyId(bookId);
-		if(book == null) {
-			throw new LibraryException("No Book found");
+	public void returnBook(String bookId, String userId) {
+		
+		if(userId == null || userId.isBlank()) {
+			throw new LibraryException("User ID cannot be empty");
 		}
+		
+		if(bookId == null || bookId.isBlank()) {
+			throw new LibraryException("Book ID cannot be empty");
+		}
+		
+		Book book = repository.findBookbyId(bookId);
+		
+		if (book == null)
+	        throw new LibraryException("Book not found");
 		
 		if(book.getStatus() == BookStatus.AVAILABLE) {
 			throw new LibraryException("Book supposed to be unavailable");
 		}
-		String userId = book.getIssuedToUserId();
+		
+		if(!book.getIssuedToUserId().equals(userId)){
+			throw new LibraryException("This book was not issued to this user");
+		}
+		
 		User user = repository.findUserById(userId);
+		
 		if (user == null) {
 	        throw new LibraryException("Issuing user not found");
 	    }
+		
 		book.setStatus(BookStatus.AVAILABLE);
 		book.setIssuedToUserId(null);
 		user.getIssuedBookIds().remove(bookId);
