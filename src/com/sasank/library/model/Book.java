@@ -2,14 +2,14 @@ package com.sasank.library.model;
 
 public class Book {
 	
-	private String id;
+	private String bookId;
 	private String title;
 	private String author;
 	private BookStatus status;
 	private String issuedToUserId;
 	
 	public Book(String id, String title, String author) {
-		this.id = id;
+		this.bookId = id;
 		this.title = title;
 		this.author = author;
 	    this.status = BookStatus.AVAILABLE;
@@ -17,7 +17,7 @@ public class Book {
 	}
 	
 	public String getId() {
-		return id;
+		return bookId;
 	}
 
 	public String getName() {
@@ -46,7 +46,7 @@ public class Book {
 	@Override
 	public String toString() {
 	    return "Book{" +
-	            "id='" + id + '\'' +
+	            "id='" + bookId + '\'' +
 	            ", name='" + title + '\'' +
 	            ", author='" + author + '\'' +
 	            ", status=" + status +
